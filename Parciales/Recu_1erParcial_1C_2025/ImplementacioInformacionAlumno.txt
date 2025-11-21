@@ -1,0 +1,35 @@
+.data
+tablaCalificaciones:
+    .half 1
+    .byte 10
+    .half 2
+    .byte 11
+    .half 3
+    .byte 10
+    .half 4
+    .byte 11
+    .half 0
+
+.text
+la t5, tablaCalificaciones
+addi t1, zero, 0x001  # t1 <- 1
+
+start:    
+    lhu t0, 0(t5) #Cargamos ID(2 bytes,unsigned)
+    lbu t4, 2(t5) #Cargamos la nota(1 byte, unsigned)
+    beq t0, zero, isZero #Vemos si ID es cero (termina el arreglo)
+    and t2, t0, t1 # hacemos un "and" del ID actual con t1=1
+    beq t2, t1, sumar # si t2=1 entonces es impar, y saltamos a la etiqueta "sumar"
+    j avanzar # Salto a la etiqueta "avanzar"
+    
+sumar:
+    add t3, t3, t4 # suma al acumulador(t3) la nota(t4)
+
+avanzar:
+    addi t5, t5, 0x003 # sumo 3(por los 3 bytes de la estructura) a la direccion actual(t5) para el siguiente alumno
+    j start #Vuelvo a realizar el bucle
+    
+isZero:
+    j isZero # bucle infinito cuando el ID es 0, termina el arreglo
+    
+# la suma de las notas totales va a estar en "t3"(acumulador), osea t3 = 20.
