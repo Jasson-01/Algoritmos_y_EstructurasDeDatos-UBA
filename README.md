@@ -11,23 +11,21 @@ En esta materia se profundiza en el diseño y la eficiencia de los Tipos Abstrac
 ### 🔗 Listas y Nodos
 Fundamento de las estructuras dinámicas. Se estudia la gestión de memoria y punteros.
 
-
-### 🌳 Árboles (BST, AVL, Rojo-Negro)
+### 🌳 Árboles (BST, AVL)
 Estructuras jerárquicas para búsqueda eficiente. El equilibrio (balanceo) es clave para mantener la complejidad en $O(\log n)$.
 
-
-[Image of a binary search tree]
-
+Estructuras jerárquicas donde cada nodo izquierdo es menor y cada derecho es mayor. El balanceo es clave para mantener la eficiencia.
 
 ### 🔼 Heaps y Colas de Prioridad
 Esenciales para algoritmos de selección y para el ordenamiento *Heapsort*.
 
-
-[Image of a binary heap]
+Árboles binarios especiales donde el nodo padre es siempre mayor (Max-Heap) o menor (Min-Heap) que sus hijos. Ideales para colas de prioridad.
 
 
 ### 🗝️ Tablas de Hash
 Uso de funciones de hash para lograr un acceso casi instantáneo $O(1)$ a los datos.
+
+Permiten el acceso a datos mediante una "función de hash" que mapea claves a índices, logrando búsquedas en tiempo constante $O(1)$.
 
 ---
 
