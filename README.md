@@ -5,7 +5,6 @@ Este repositorio contiene una recopilación de recursos esenciales para cursar *
 
 ---
 
----
 
 ## 🧩 Fundamentos Matemáticos y Lógicos
 
