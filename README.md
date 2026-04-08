@@ -5,6 +5,15 @@ Este repositorio contiene una recopilación de recursos esenciales para cursar *
 
 ---
 
+---
+
+## 🧩 Fundamentos Matemáticos y Lógicos
+
+Estos recursos ayudan a desarrollar el pensamiento formal necesario para entender algoritmos, complejidad y demostraciones.
+
+* 📘 **How to Prove It – Daniel Velleman**  
+  https://ia800501.us.archive.org/7/items/how-to-prove-it-a-structured-approach-daniel-j.-velleman/How%20to%20Prove%20It%20A%20Structured%20Approach%20%28Daniel%20J.%20Velleman%29.pdf
+
 ## 🧠 Estructuras de Datos Clave
 En esta materia se profundiza en el diseño y la eficiencia de los Tipos Abstractos de Datos (TADs). Aquí los conceptos principales:
 
