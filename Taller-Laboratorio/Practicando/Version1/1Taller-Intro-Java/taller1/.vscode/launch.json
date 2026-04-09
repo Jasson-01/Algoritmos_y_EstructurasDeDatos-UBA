@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Tests",
+            "type": "java",
+            "name": "Debug All Tests",
+            "request": "launch",
+            "mainClass": "org.junit.runner.JUnitCore",
+            "args": "aed.FuncionesTest",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal"
+        }
+    ]
+}
