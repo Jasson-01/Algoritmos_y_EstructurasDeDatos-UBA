@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Fecha.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">labo2</a> &gt; <a href="index.source.html" class="el_package">aed</a> &gt; <span class="el_source">Fecha.java</span></div><h1>Fecha.java</h1><pre class="source lang-java linenums">package aed;
+
+public class Fecha {
+    
+    //Los private vendrian a ser el concepto de ENCAPSULAMIENTO
+    //Pero en realidad, private en Java significa &quot;accesible solo dentro de la misma clase&quot;. Es como una caja fuerte en tu casa: tú (la clase) puedes abrirla y usar lo que hay dentro, pero los demás (otras clases) no pueden acceder directamente. Los getters como dia() y mes() son como &quot;ventanitas&quot; controladas que permiten &quot;ver&quot; el contenido sin dar acceso total. Esto se llama encapsulamiento: proteges los datos internos, pero decides cómo compartirlos a través de métodos públicos. ¡Es una forma de mantener el control y la seguridad en el código!
+    private int dia;
+    private int mes;
+
+<span class="fc" id="L10">    public Fecha(int dia, int mes) { //Constructor normal</span>
+        // Implementar
+<span class="fc" id="L12">       this.dia = dia;</span>
+<span class="fc" id="L13">       this.mes = mes;</span>
+<span class="fc" id="L14">    }</span>
+ 
+    //Los metodos public vendrian a ser el concepto de ABSTRACCIÓN 
+<span class="fc" id="L17">    public Fecha(Fecha fecha) { //Constructor por copia</span>
+        // Implementar
+<span class="fc" id="L19">        this.dia = fecha.dia;</span>
+<span class="fc" id="L20">        this.mes = fecha.mes;</span>
+<span class="fc" id="L21">    }</span>
+
+    public Integer dia() {
+        // Implementar
+<span class="fc" id="L25">        return this.dia;</span>
+    }
+
+    public Integer mes() {
+        // Implementar
+<span class="fc" id="L30">        return this.mes;</span>
+    }
+
+    public String toString() {
+        // Implementar
+<span class="fc" id="L35">        return this.dia + &quot;/&quot; + this.mes;</span>
+    }
+
+    @Override
+    public boolean equals(Object otra) {
+        // Implementar
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">        boolean otraEsNull = (otra == null);</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">        if(otraEsNull){</span>
+<span class="nc" id="L43">            return false;</span>
+        }
+
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        boolean claseDistinta = otra.getClass() != this.getClass();</span>
+
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        if(claseDistinta){</span>
+<span class="fc" id="L49">            return false;</span>
+        }
+
+        // casting -&gt; cambiar el tipo
+<span class="fc" id="L53">        Fecha otraFecha = (Fecha) otra;</span>
+
+<span class="fc bfc" id="L55" title="All 4 branches covered.">        return this.dia == otraFecha.dia &amp;&amp; this.mes == otraFecha.mes;</span>
+    }
+
+    public void incrementarDia() {
+        // Implementar
+<span class="fc" id="L60">        int ultimoDiaDelMes = diasEnMes(this.mes);</span>
+<span class="fc" id="L61">        int diaActual = this.dia;</span>
+<span class="fc" id="L62">        int mesActual = this.mes;</span>
+
+<span class="pc bpc" id="L64" title="1 of 4 branches missed.">        if( mesActual == 12 &amp;&amp; diaActual &lt; ultimoDiaDelMes){</span>
+<span class="nc" id="L65">            this.dia += 1;</span>
+<span class="pc bpc" id="L66" title="1 of 4 branches missed.">        } else if (mesActual == 12 &amp;&amp; diaActual == ultimoDiaDelMes) {</span>
+<span class="fc" id="L67">            this.dia = 1;</span>
+<span class="fc" id="L68">            this.mes = 1;</span>
+<span class="pc bpc" id="L69" title="1 of 4 branches missed.">        } else if ( mesActual &lt; 12 &amp;&amp; diaActual &lt; ultimoDiaDelMes){</span>
+<span class="fc" id="L70">            this.dia += 1;</span>
+<span class="pc bpc" id="L71" title="2 of 4 branches missed.">        } else if (mesActual &lt; 12 &amp;&amp; diaActual == ultimoDiaDelMes){</span>
+<span class="fc" id="L72">            this.dia = 1;</span>
+<span class="fc" id="L73">            this.mes += 1;</span>
+        }
+<span class="fc" id="L75">    }</span>
+    
+    private int diasEnMes(int mes) {
+<span class="fc" id="L78">        int dias[] = {</span>
+                // ene, feb, mar, abr, may, jun
+                31, 28, 31, 30, 31, 30,
+                // jul, ago, sep, oct, nov, dic
+                31, 31, 30, 31, 30, 31
+        };
+<span class="fc" id="L84">        return dias[mes - 1];</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
