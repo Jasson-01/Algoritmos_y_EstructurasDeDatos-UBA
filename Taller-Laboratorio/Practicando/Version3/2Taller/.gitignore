@@ -1,0 +1,21 @@
+# Carpeta de compilación de Maven
+**/target/
+**/target
+
+# Configuraciones de VS Code
+.vscode/
+.history/
+
+# Archivos temporales o del sistema operativo
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
+*.log
+
+# Configuraciones de IntelliJ IDEA u otros IDEs
+.idea/
+*.iml
+.classpath
+.project
+.settings/
