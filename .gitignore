@@ -1,0 +1,105 @@
+# --- Java / Maven ---
+# Compiled class file
+*.class
+
+# Log files
+*.log
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+# Avoid ignoring maven wrapper jar if it's explicitly used, but standard maven-wrapper can be ignored or kept.
+# .mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle/
+build/
+
+# --- IDEs and Editors ---
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Eclipse
+.metadata/
+.classpath
+.project
+.settings/
+.factorypath
+
+# Visual Studio Code
+.vscode/
+.history/
+
+# BlueJ
+*.ctxt
+
+# NetBeans
+**/nbproject/private/
+**/nbbuild/
+**/dist/
+**/nbproject/Makefile-*.mk
+**/nbproject/Package-*.properties
+
+# --- OS temporary/system files ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# --- LaTeX Auxiliary Files ---
+*.aux
+*.bbl
+*.blg
+*.dvi
+*.fls
+*.glg
+*.glo
+*.gls
+*.idx
+*.ilg
+*.ind
+*.ist
+*.lof
+*.lot
+*.maf
+*.mtc
+*.mtc0
+*.nav
+*.nlo
+*.out
+*.pdfsync
+*.synctex.gz
+*.toc
+*.vrb
+*.snm
+*.fdb_latexmk
+
+# --- Backup/Temporary files ---
+*~
+*.bak
+*.swp
+*.tmp
