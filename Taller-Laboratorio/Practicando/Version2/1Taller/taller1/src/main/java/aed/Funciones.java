@@ -45,11 +45,11 @@ class Funciones {
     int factorialRecursivo(int n) {
         // COMPLETAR
         int res;
-        if (n > 0){
-            res = n * factorialRecursivo( n - 1 );
+        if (n > 0) {
+            res = n * factorialRecursivo(n - 1);
         } else {
             res = 1;
-        }      
+        }
         return res;
     }
 
@@ -59,10 +59,10 @@ class Funciones {
             return false;
         }
 
-        for (int i=2; i<n; i++){
-           if(n % i == 0){
-             return false;
-           }  
+        for (int i = 2; i < n; i++) {
+            if (n % i == 0) {
+                return false;
+            }
         }
         return true;
     }
@@ -70,7 +70,7 @@ class Funciones {
     int sumatoria(int[] numeros) {
         // COMPLETAR
         int acumulador = 0;
-        for(int i=0; i < numeros.length; i++){
+        for (int i = 0; i < numeros.length; i++) {
             acumulador += numeros[i];
         }
         return acumulador;
@@ -78,8 +78,8 @@ class Funciones {
 
     int busqueda(int[] numeros, int buscado) {
         // COMPLETAR
-        for(int i=0; i<numeros.length; i++){
-            if( buscado == numeros[i]){
+        for (int i = 0; i < numeros.length; i++) {
+            if (buscado == numeros[i]) {
                 return i;
             }
         }
@@ -88,8 +88,8 @@ class Funciones {
 
     boolean tienePrimo(int[] numeros) {
         // COMPLETAR
-        for(int i=0; i<numeros.length; i++){
-            if(esPrimo(numeros[i])){
+        for (int i = 0; i < numeros.length; i++) {
+            if (esPrimo(numeros[i])) {
                 return true;
             }
         }
@@ -98,8 +98,8 @@ class Funciones {
 
     boolean todosPares(int[] numeros) {
         // COMPLETAR
-        for(int i=0; i<numeros.length; i++){
-            if(numeros[i] % 2 == 1){
+        for (int i = 0; i < numeros.length; i++) {
+            if (numeros[i] % 2 == 1) {
                 return false;
             }
         }
@@ -108,12 +108,12 @@ class Funciones {
 
     boolean esPrefijo(String s1, String s2) {
         // COMPLETAR
-        if(s1.length() > s2.length()){
+        if (s1.length() > s2.length()) {
             return false;
         }
 
-        for(int i=0; i<s1.length(); i++){
-            if ( s1.charAt(i) != s2.charAt(i)){
+        for (int i = 0; i < s1.length(); i++) {
+            if (s1.charAt(i) != s2.charAt(i)) {
                 return false;
             }
         }
@@ -122,12 +122,12 @@ class Funciones {
 
     boolean esSufijo(String s1, String s2) {
         // COMPLETAR
-        if(s1.length() > s2.length()){
+        if (s1.length() > s2.length()) {
             return false;
-        } 
+        }
 
-        for(int i=s1.length()-1; i>=0; i--){
-            if(s1.charAt(i) != s2.charAt(s2.length() - s1.length() + i)){
+        for (int i = s1.length() - 1; i >= 0; i--) {
+            if (s1.charAt(i) != s2.charAt(s2.length() - s1.length() + i)) {
                 return false;
             }
         }
@@ -136,12 +136,17 @@ class Funciones {
 
     /*** Segunda parte: Debugging ***/
 
+    // El problema AQUI es el uso adecuado de los parentesis
     boolean xor(boolean a, boolean b) {
         return (a || b) && !(a && b);
     }
 
+    // El problema AQUI esta en las longitudes de las listas
     boolean iguales(int[] xs, int[] ys) {
         boolean res = true;
+        if (xs.length != ys.length) {
+            return false;
+        }
 
         for (int i = 0; i < xs.length; i++) {
             if (xs[i] != ys[i]) {
@@ -151,9 +156,16 @@ class Funciones {
         return res;
     }
 
+    // El problema AQUI es cuando la longitud de la lista es 1 y el rango de los
+    // valos obtenidos por el for.
     boolean ordenado(int[] xs) {
+
+        if (xs.length == 1) {
+            return true;
+        }
+
         boolean res = true;
-        for (int i = 0; i < xs.length; i++) {
+        for (int i = 0; i < xs.length - 1; i++) {
             if (xs[i] > xs[i + 1]) {
                 res = false;
             }
@@ -161,22 +173,33 @@ class Funciones {
         return res;
     }
 
+    // El problema AQUI era que debia comenzar con el primer valor de la lista y no
+    // con 0 y ademas el if debe se el valor de la lista en la posicion que le gano
+    // en la condicion ;D.
     int maximo(int[] xs) {
-        int res = 0;
-        for (int i = 0; i <= xs.length; i++) {
+        int res = xs[0];
+        for (int i = 0; i < xs.length; i++) {
             if (xs[i] > res)
-                res = i;
+                res = xs[i];
         }
         return res;
     }
 
+    // El problema AQUI es cuando la longitud es cero y tambien radicaba en que la
+    // variable res se reasignaba en cada iteración del bucle, haciendo que su valor
+    // final dependiera únicamente del último elemento del array.
     boolean todosPositivos(int[] xs) {
         boolean res = false;
+
+        if (xs.length == 0) {
+            return true;
+        }
+
         for (int x : xs) {
             if (x > 0) {
                 res = true;
             } else {
-                res = false;
+                return false;
             }
         }
         return res;
