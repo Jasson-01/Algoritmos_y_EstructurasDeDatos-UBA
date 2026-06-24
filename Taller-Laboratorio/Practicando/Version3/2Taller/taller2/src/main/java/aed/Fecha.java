@@ -56,7 +56,8 @@ public class Fecha {
     public void incrementarDia() {
         // Implementar
         //  System.out.println(diasEnMes(6)); --> res = 30
-        if ( mes > 12) {
+        // ojo: cuando el mes era "12" y era un ">" -> daba false e iba al else
+        if ( mes >= 12 && dia >= diasEnMes(mes)) {
            mes = 1;
            dia = 1;
         } else {
