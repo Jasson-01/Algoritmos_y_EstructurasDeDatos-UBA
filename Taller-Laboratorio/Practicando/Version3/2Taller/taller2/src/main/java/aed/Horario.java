@@ -5,13 +5,16 @@ public class Horario {
     private int minutos;
 
     public Horario(int hora, int minutos) {
-        // Implementar
         this.hora = hora;
         this.minutos = minutos;
     }
 
+    public Horario(Horario horario) {
+        this.hora = horario.hora();
+        this.minutos = horario.minutos();
+    }
+
     public int hora() {
-        // Implementar
         return hora;
     }
 
