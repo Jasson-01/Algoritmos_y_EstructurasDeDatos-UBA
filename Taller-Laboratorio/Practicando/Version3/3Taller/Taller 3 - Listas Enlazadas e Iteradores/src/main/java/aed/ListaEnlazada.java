@@ -2,21 +2,43 @@ package aed;
 
 public class ListaEnlazada<T> {
     // Completar atributos privados
+    private Nodo primero;
+    private Nodo ultimo;
+    private int longitudLista;
 
     private class Nodo {
         // Completar
+        T valor;
+        Nodo sig;
+        Nodo ant;
+        Nodo (T v){
+            valor = v;
+        }
     }
 
     public ListaEnlazada() {
-        throw new UnsupportedOperationException("No implementada aun");
+        primero = null;
+        ultimo = null;
+        longitudLista = 0;
     }
 
     public int longitud() {
-        throw new UnsupportedOperationException("No implementada aun");
+        return longitudLista;
     }
 
     public void agregarAdelante(T elem) {
-        throw new UnsupportedOperationException("No implementada aun");
+        Nodo nuevo = new Nodo(elem);
+        nuevo.sig = primero;
+        nuevo.ant = null;
+
+        if ( primero == null) {
+            ultimo = nuevo;
+        } else {
+            // Al viejo primer nodo le avisamos que ahora tiene a 'nuevo' antes que él
+            primero.ant = nuevo;
+        }
+        primero = nuevo;
+        longitudLista += 1;
     }
 
     public void agregarAtras(T elem) {
