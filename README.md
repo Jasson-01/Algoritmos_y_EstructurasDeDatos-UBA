@@ -47,6 +47,10 @@ Permiten el acceso a datos mediante una "función de hash" que mapea claves a í
 ### 🔍 Temas Específicos
 * 📈 **Complejidad Computacional:** [Análisis de Algoritmos (Video)](https://youtu.be/vLRd-VEK218)
 
+### 🧠 Prompts para estudiar mejor con IA
+* ✨ **Fuente de prompts:** [Prompts NotebookLM / MIT para aprender cualquier tema](https://app.notion.com/p/Prompts-NotebookLM-M-todo-MIT-para-aprender-cualquier-tema-en-90-minutos-38d5accb1cc980eaa470efa40fe9f40f)
+* 🎥 **Créditos:** [Video de YouTube que inspiró la fuente](https://www.youtube.com/watch?v=qVJytQsDUr8&list=LL&index=1&t=429s) by @MigueBaenaIA
+
 ---
 
 ## 📚 Material de Práctica y Guías
