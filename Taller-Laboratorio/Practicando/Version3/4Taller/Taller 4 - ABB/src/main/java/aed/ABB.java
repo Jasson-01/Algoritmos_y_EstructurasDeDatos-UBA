@@ -66,7 +66,7 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
 
     public void insertar(T elem) {
         Nodo actual = _raiz;
-        Nodo actual.padre = _raiz;
+        Nodo anterior = _raiz;
         Nodo nuevo = new Nodo(elem);
         int comparador = 0;
 
@@ -79,7 +79,7 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
         // Si el arbol No esta vacio
         while (actual != null) { // Si el nodo "actual" llega a null significa que ya recorrio toda la lista
             comparador = elem.compareTo(actual.valor);
-            actual.padre = actual;
+            anterior = actual;
             if (comparador == 0) { // Si tiene el mismo valor, no hacemos nada
                 return;
             } else if (comparador < 0) { // Es menor, vamos a la izquierda
@@ -89,11 +89,11 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
             }
         }
 
-        nuevo.padre = actual.padre;
+        nuevo.padre = anterior;
         if (comparador < 0) {
-            actual.padre.izq = nuevo;
+            anterior.izq = nuevo;
         } else {
-            actual.padre.der = nuevo;
+            anterior.der = nuevo;
         }
 
         _cardinal += 1;
@@ -146,30 +146,12 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
     }
 
     public void eliminar(T elem) {
-        Nodo actual = _raiz;
-        Nodo nodoPorEliminar = nodoAEliminar(elem);
-
-        // Buscamos el Nodo a eliminar y su padre
-        while (actual.valor != elem) {
-
-            if (elem.compareTo(actual.valor) == 0) { // Ojo con las comparaciones, no puedes compara T != T (son tipos
-                                                     // genéricos)
-                return; // sabemos que actual es la raiz
-            }
-
-            int comparador = elem.compareTo(actual.valor); // El orden importa! si elem < actual.valor -> vamos a la
-                                                           // izquierda (entero menor a 0)
-            if (comparador < 0) {
-                actual = actual.izq; // Es menor, vamos a la izquierda
-            } else {
-                actual = actual.der; // Es mayor, vamos a la derecha
-            }
-        }
-
+        Nodo actual = nodoAEliminar(elem);
+        
         if (actual == null) {
             return;
         }
-
+        
         // En esta etapa sabemos que el elem pertenece a un Nodo del Arbol
         // Caso: "El elemento es una hoja (no tiene hijos)"
         if (esHoja(actual)) {
