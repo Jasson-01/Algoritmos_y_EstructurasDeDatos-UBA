@@ -2,14 +2,14 @@ package aed;
 
 import java.util.*;
 
+import aed.ABB.ABB_Iterador;
+
 // Todos los tipos de datos "Comparables" tienen el método compareTo()
 // elem1.compareTo(elem2) devuelve un entero. Si es mayor a 0, entonces elem1 > elem2
 public class ABB<T extends Comparable<T>> implements Conjunto<T> {
     // Agregar atributos privados del Conjunto
     private Nodo _raiz;
     private int _cardinal;
-    private int _altura;
-
     private class Nodo {
         // Agregar atributos privados del Nodo
         T valor;
@@ -30,7 +30,6 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
     public ABB() {
         _raiz = null;
         _cardinal = 0;
-        _altura = 0;
     }
 
     public int cardinal() {
@@ -121,8 +120,8 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
 
     // *** Aqui comienzan los metodos auxiliares del metodo eliminar() ***
 
-    public boolean tieneUnSoloHijo(Nodo nodo){
-        if((nodo.izq != null && nodo.der == null) || (nodo.izq == null && nodo.der != null)){
+    public boolean tieneUnSoloHijo(Nodo nodo) {
+        if ((nodo.izq != null && nodo.der == null) || (nodo.izq == null && nodo.der != null)) {
             return true;
         }
         return false;
@@ -133,6 +132,68 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
             return true;
         }
         return false;
+    }
+
+    public Nodo minimoNodoDer(Nodo actual) {
+        Nodo nodoDerecho = actual.der;
+        while (nodoDerecho.izq != null) {
+            nodoDerecho = nodoDerecho.izq;
+        }
+        return nodoDerecho; // Encontramos al nodo minimo, Aqui la variable nodoDerecho se connvierte en el
+                            // nodo minimo que buscabamos.
+    }
+
+    public void eliminarNodoGeneral(Nodo actual) {
+
+        if (esHoja(actual)) {
+            if (actual == _raiz) { // Si el nodo actual(el nodo a eliminar) es la raiz, Aqui compara Nodos No
+                                   // variables de tipo T por eso funciona usar == (vendria a ser como comparar
+                                   // direcciones :D)
+                _raiz = null;
+            } else { // Busco en que lado esta el nodo (der o izq)
+                int comparador = actual.valor.compareTo(actual.padre.valor);
+                if (comparador < 0) {
+                    actual.padre.izq = null;
+                } else { // comparador > 0
+                    actual.padre.der = null;
+                }
+            }
+        }
+
+        if (tieneUnSoloHijo(actual)) {
+            if (actual == _raiz) { // Si el nodo actual(el nodo a eliminar) es la raiz, Aqui compara Nodos, No
+                                   // variables de tipo T por eso funciona usar == (vendria a ser como comparar
+                                   // direcciones :D)
+                if (actual.izq != null) { // El hijo izquierdo No es Null
+                    _raiz = actual.izq; // la raiz pasa a ser el hijo izquierdo
+                    _raiz.padre = null;
+                } else { // El hijo derecho No es Null
+                    _raiz = actual.der; // la raiz pasa a ser el hijo derecho
+                    _raiz.padre = null;
+                }
+            } else { // Busco en que lado esta el nodo (der o izq)
+                if (actual.izq != null) { // El hijo izquierdo No es Null
+                    Nodo nieto = actual.izq;
+                    nieto.padre = actual.padre; // El nieto apunta al abuelo
+                    if (actual.padre.izq == actual) { // Le preguntás al abuelo si su brazo izquierdo sostenía al
+                                                      // eliminado(actual)
+                        actual.padre.izq = nieto; // El abuelo apunta al nieto
+                    } else {
+                        actual.padre.der = nieto;
+                    }
+
+                } else { // El hijo derecho No es Null
+                    Nodo nieto = actual.der;
+                    nieto.padre = actual.padre; // El nieto apunta al abuelo
+                    if (actual.padre.izq == actual) { // Le preguntás al abuelo si su brazo izquierdo sostenía al
+                                                      // eliminado(actual)
+                        actual.padre.izq = nieto; // El abuelo apunta al nieto
+                    } else {
+                        actual.padre.der = nieto;
+                    }
+                }
+            }
+        }
     }
 
     public Nodo nodoAEliminar(T elem) {
@@ -156,74 +217,94 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
 
     public void eliminar(T elem) {
         Nodo actual = nodoAEliminar(elem);
-        
-        if (actual == null) {
+
+        if (actual == null) { // Si el arbol esta vacio
+            return; // No existe, devolvemos asi como esta, sin avanzar mas en el codigo (salimos del metodo)
+        }
+
+        // Eligimos entre el caso 1 o el caso 2
+        if (esHoja(actual) || tieneUnSoloHijo(actual)) {
+            eliminarNodoGeneral(actual); 
+        }
+        // Si no es uno de los casos anteriores, entonces es el caso 3 por descarte
+        else {
+            Nodo reemplazoMinimoDer = minimoNodoDer(actual);
+            actual.valor = reemplazoMinimoDer.valor; // el valor del minimo lo pasamos al nodo.valor a reemplazar
+            eliminarNodoGeneral(reemplazoMinimoDer); // eliminamos el nodo minimo que nos ayudo a reemplazar el nodo a eliminar
+        }
+
+        _cardinal--; 
+    }
+
+    public void inOrder(Nodo actual, ArrayList<T> lista){
+        if (actual == null){
             return;
         }
-        
-        // En esta etapa sabemos que el elem pertenece a un Nodo del Arbol
-        // Caso: "El elemento es una hoja (no tiene hijos)"
-        if (esHoja(actual)) {
-            if (actual == _raiz) {  // Si el nodo actual(el nodo a eliminar) es la raiz, Aqui compara Nodos No variables de tipo T por eso funciona usar == (vendria a ser como comparar direcciones :D)
-                _raiz = null;
-            } else { // Busco en que lado esta el nodo (der o izq)
-                int comparador = actual.valor.compareTo(actual.padre.valor);
-                if (comparador < 0) {
-                    actual.padre.izq = null;
-                } else { // comparador > 0
-                    actual.padre.der = null;
-                }
-            }
-        }
-
-        if (tieneUnSoloHijo(actual)){
-            if (actual == _raiz) { // Si el nodo actual(el nodo a eliminar) es la raiz, Aqui compara Nodos No variables de tipo T por eso funciona usar == (vendria a ser como comparar direcciones :D)
-                if (actual.izq != null) { // El hijo izquierdo No es Null
-                    _raiz = actual.izq; // la raiz pasa a ser el hijo izquierdo
-                    _raiz.padre = null;
-                } else { // El hijo derecho No es Null
-                   _raiz = actual.der ; // la raiz pasa a ser el hijo derecho
-                    _raiz.padre = null;
-                } 
-            } else { // Busco en que lado esta el nodo (der o izq)
-                if (actual.izq != null) { // El hijo izquierdo No es Null
-                    Nodo nieto = actual.izq;
-                    nieto.padre = actual.padre; // El nieto apunta al abuelo
-                    if(actual.padre.izq == actual){ //Le preguntás al abuelo si su brazo izquierdo sostenía al eliminado(actual)
-                         actual.padre.izq = nieto; //El abuelo apunta al nieto
-                    } else {
-                        actual.padre.der = nieto;
-                    }
-                    
-                } else { // El hijo derecho No es Null
-                    Nodo nieto = actual.der;
-                    nieto.padre = actual.padre; // El nieto apunta al abuelo
-                    if(actual.padre.izq == actual){ //Le preguntás al abuelo si su brazo izquierdo sostenía al eliminado(actual)
-                         actual.padre.izq = nieto; //El abuelo apunta al nieto
-                    } else {
-                        actual.padre.der = nieto;
-                    }
-                } 
-            }
-        }
-
-        
-
+        inOrder(actual.izq, lista);
+        lista.add(actual.valor);
+        inOrder(actual.der, lista);
     }
 
     public String toString() {
-        throw new UnsupportedOperationException("No implementada aun");
+       ArrayList<T> listaDeElementos = new ArrayList<>(); // Es mejor usar ArrayList que Arreglos
+       Nodo actual = _raiz;
+       inOrder(actual, listaDeElementos);
+
+       String textoAImprimir = "{";
+       for(int i=0; i<listaDeElementos.size(); i++){
+           if( i == listaDeElementos.size() - 1 ){
+               T elem = listaDeElementos.get(i);
+               textoAImprimir += elem;
+           } else {
+               T elem = listaDeElementos.get(i);
+               textoAImprimir += elem + ",";
+           }
+       }
+       textoAImprimir += "}";
+       return textoAImprimir;
     }
 
-    public class ABB_Iterador {
-        private Nodo _actual;
+    // haySiguiente(): Devuelve true si todavía quedan números por visitar.
+    // siguiente(): Devuelve el número actual y avanza el control remoto al próximo elemento en orden.
+
+    public class ABB_Iterador implements Iterador<T>{
+        private Nodo actual;
+        
+        public ABB_Iterador(){
+            actual = _raiz;
+            
+            if ( actual != null ) {
+                while (actual.izq != null) {
+                    actual = actual.izq;
+                }
+            }
+            // Si actual es NULL -> ¿Cuál es la magia de esto? Que cuando el usuario del iterador intente arrancar y pregunte: "Che, ¿haySiguiente()?", tu método va a ver que actual es null y le va a devolver false
+        }
 
         public boolean haySiguiente() {
-            throw new UnsupportedOperationException("No implementada aun");
+            if (actual != null){
+                return true;
+            }
+            return false;
         }
 
         public T siguiente() {
-            throw new UnsupportedOperationException("No implementada aun");
+            T valorQuerido = actual.valor;  //Devuelvo el valor del nodo querido
+
+            // Ahora me muevo al siguiente Nodo
+            if( actual.der != null){ // Si hay nodo derecho -> Subo por el lado izquierdo (menor -> padre -> mayor)
+                actual = actual.der;
+                while (actual.izq != null) {
+                    actual = actual.izq;
+                }
+            } else { // Subo por el lado derecho  -> mi padre ya fue visitado ( el valor del padre es menor que el hijo) -> apuntamos al abuelo 
+                while( actual.padre != null && actual.padre.der == actual){ //Me dice: ¿De qué brazo de mi papá vengo colgado?"
+                    actual = actual.padre; //Sigo subiendo porque el padre ya fue visitado
+                }
+                // Al salir del while significa que ahora actaul es el hijo izquierdo
+                actual = actual.padre;
+            }
+            return valorQuerido;
         }
     }
 
