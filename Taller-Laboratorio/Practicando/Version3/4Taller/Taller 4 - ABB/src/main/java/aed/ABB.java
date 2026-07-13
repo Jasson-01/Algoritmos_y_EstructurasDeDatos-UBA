@@ -1,8 +1,8 @@
 package aed;
 
-import java.util.*;
+//import java.util.*;
 
-import aed.ABB.ABB_Iterador;
+//import aed.ABB.ABB_Iterador;
 
 // Todos los tipos de datos "Comparables" tienen el método compareTo()
 // elem1.compareTo(elem2) devuelve un entero. Si es mayor a 0, entonces elem1 > elem2
@@ -10,6 +10,7 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
     // Agregar atributos privados del Conjunto
     private Nodo _raiz;
     private int _cardinal;
+
     private class Nodo {
         // Agregar atributos privados del Nodo
         T valor;
@@ -219,87 +220,117 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
         Nodo actual = nodoAEliminar(elem);
 
         if (actual == null) { // Si el arbol esta vacio
-            return; // No existe, devolvemos asi como esta, sin avanzar mas en el codigo (salimos del metodo)
+            return; // No existe, devolvemos asi como esta, sin avanzar mas en el codigo (salimos
+                    // del metodo)
         }
 
         // Eligimos entre el caso 1 o el caso 2
         if (esHoja(actual) || tieneUnSoloHijo(actual)) {
-            eliminarNodoGeneral(actual); 
+            eliminarNodoGeneral(actual);
         }
         // Si no es uno de los casos anteriores, entonces es el caso 3 por descarte
         else {
             Nodo reemplazoMinimoDer = minimoNodoDer(actual);
             actual.valor = reemplazoMinimoDer.valor; // el valor del minimo lo pasamos al nodo.valor a reemplazar
-            eliminarNodoGeneral(reemplazoMinimoDer); // eliminamos el nodo minimo que nos ayudo a reemplazar el nodo a eliminar
+            eliminarNodoGeneral(reemplazoMinimoDer); // eliminamos el nodo minimo que nos ayudo a reemplazar el nodo a
+                                                     // eliminar
         }
 
-        _cardinal--; 
-    }
-
-    public void inOrder(Nodo actual, ArrayList<T> lista){
-        if (actual == null){
-            return;
-        }
-        inOrder(actual.izq, lista);
-        lista.add(actual.valor);
-        inOrder(actual.der, lista);
+        _cardinal--;
     }
 
     public String toString() {
-       ArrayList<T> listaDeElementos = new ArrayList<>(); // Es mejor usar ArrayList que Arreglos
-       Nodo actual = _raiz;
-       inOrder(actual, listaDeElementos);
+        String textoAImprimir = "{";
 
-       String textoAImprimir = "{";
-       for(int i=0; i<listaDeElementos.size(); i++){
-           if( i == listaDeElementos.size() - 1 ){
-               T elem = listaDeElementos.get(i);
-               textoAImprimir += elem;
-           } else {
-               T elem = listaDeElementos.get(i);
-               textoAImprimir += elem + ",";
-           }
-       }
-       textoAImprimir += "}";
-       return textoAImprimir;
+        // Creamos nuestro propio iterador que se ubica en el arbol actual
+        ABB_Iterador iterador = this.iterador();
+
+        // Recorremos el arbol usando el iterador
+        while (iterador.haySiguiente()) {
+            T elemActual = iterador.siguiente();
+            textoAImprimir += elemActual;
+
+            //  Si hay más elementos después de este, agregamos la coma
+            if (iterador.haySiguiente()) {
+                textoAImprimir += ",";
+            }
+        }
+
+        textoAImprimir += "}";
+        return textoAImprimir;
     }
 
-    // haySiguiente(): Devuelve true si todavía quedan números por visitar.
-    // siguiente(): Devuelve el número actual y avanza el control remoto al próximo elemento en orden.
+    // ** Segunda forma
+    // public void inOrder(Nodo actual, ArrayList<T> lista){
+    // if (actual == null){
+    // return;
+    // }
+    // inOrder(actual.izq, lista);
+    // lista.add(actual.valor);
+    // inOrder(actual.der, lista);
+    // }
 
-    public class ABB_Iterador implements Iterador<T>{
+    // public String toString() {
+    // ArrayList<T> listaDeElementos = new ArrayList<>(); // Es mejor usar ArrayList
+    // que Arreglos
+    // Nodo actual = _raiz;
+    // inOrder(actual, listaDeElementos);
+
+    // String textoAImprimir = "{";
+    // for(int i=0; i<listaDeElementos.size(); i++){
+    // if( i == listaDeElementos.size() - 1 ){
+    // T elem = listaDeElementos.get(i);
+    // textoAImprimir += elem;
+    // } else {
+    // T elem = listaDeElementos.get(i);
+    // textoAImprimir += elem + ",";
+    // }
+    // }
+    // textoAImprimir += "}";
+    // return textoAImprimir;
+    // }
+
+    // haySiguiente(): Devuelve true si todavía quedan números por visitar.
+    // siguiente(): Devuelve el número actual y avanza el control remoto al próximo
+    // elemento en orden.
+
+    public class ABB_Iterador implements Iterador<T> {
         private Nodo actual;
-        
-        public ABB_Iterador(){
+
+        public ABB_Iterador() {
             actual = _raiz;
-            
-            if ( actual != null ) {
+
+            if (actual != null) {
                 while (actual.izq != null) {
                     actual = actual.izq;
                 }
             }
-            // Si actual es NULL -> ¿Cuál es la magia de esto? Que cuando el usuario del iterador intente arrancar y pregunte: "Che, ¿haySiguiente()?", tu método va a ver que actual es null y le va a devolver false
+            // Si actual es NULL -> ¿Cuál es la magia de esto? Que cuando el usuario del
+            // iterador intente arrancar y pregunte: "Che, ¿haySiguiente()?", tu método va a
+            // ver que actual es null y le va a devolver false
         }
 
         public boolean haySiguiente() {
-            if (actual != null){
+            if (actual != null) {
                 return true;
             }
             return false;
         }
 
         public T siguiente() {
-            T valorQuerido = actual.valor;  //Devuelvo el valor del nodo querido
+            T valorQuerido = actual.valor; // Devuelvo el valor del nodo querido
 
             // Ahora me muevo al siguiente Nodo
-            if( actual.der != null){ // Si hay nodo derecho -> Subo por el lado izquierdo (menor -> padre -> mayor)
+            if (actual.der != null) { // Si hay nodo derecho -> Subo por el lado izquierdo (menor -> padre -> mayor)
                 actual = actual.der;
                 while (actual.izq != null) {
                     actual = actual.izq;
                 }
-            } else { // Subo por el lado derecho  -> mi padre ya fue visitado ( el valor del padre es menor que el hijo) -> apuntamos al abuelo 
-                while( actual.padre != null && actual.padre.der == actual){ //Me dice: ¿De qué brazo de mi papá vengo colgado?"
-                    actual = actual.padre; //Sigo subiendo porque el padre ya fue visitado
+            } else { // Subo por el lado derecho -> mi padre ya fue visitado ( el valor del padre es
+                     // menor que el hijo) -> apuntamos al abuelo
+                while (actual.padre != null && actual.padre.der == actual) { // Me dice: ¿De qué brazo de mi papá vengo
+                                                                             // colgado?"
+                    actual = actual.padre; // Sigo subiendo porque el padre ya fue visitado
                 }
                 // Al salir del while significa que ahora actaul es el hijo izquierdo
                 actual = actual.padre;
