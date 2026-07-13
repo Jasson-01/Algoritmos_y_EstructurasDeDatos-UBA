@@ -66,7 +66,7 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
 
     public void insertar(T elem) {
         Nodo actual = _raiz;
-        Nodo anterior = _raiz;
+        Nodo anterior = _raiz; // Vamos a usarlo como el padre del Nodo a insertar
         Nodo nuevo = new Nodo(elem);
         int comparador = 0;
 
@@ -119,6 +119,15 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
         return false;
     }
 
+    // *** Aqui comienzan los metodos auxiliares del metodo eliminar() ***
+
+    public boolean tieneUnSoloHijo(Nodo nodo){
+        if((nodo.izq != null && nodo.der == null) || (nodo.izq == null && nodo.der != null)){
+            return true;
+        }
+        return false;
+    }
+
     public boolean esHoja(Nodo nodo) {
         if (nodo.izq == null && nodo.der == null) {
             return true;
@@ -155,7 +164,7 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
         // En esta etapa sabemos que el elem pertenece a un Nodo del Arbol
         // Caso: "El elemento es una hoja (no tiene hijos)"
         if (esHoja(actual)) {
-            if (actual == _raiz) { // Si el nodo actual es la raiz
+            if (actual == _raiz) {  // Si el nodo actual(el nodo a eliminar) es la raiz, Aqui compara Nodos No variables de tipo T por eso funciona usar == (vendria a ser como comparar direcciones :D)
                 _raiz = null;
             } else { // Busco en que lado esta el nodo (der o izq)
                 int comparador = actual.valor.compareTo(actual.padre.valor);
@@ -166,6 +175,39 @@ public class ABB<T extends Comparable<T>> implements Conjunto<T> {
                 }
             }
         }
+
+        if (tieneUnSoloHijo(actual)){
+            if (actual == _raiz) { // Si el nodo actual(el nodo a eliminar) es la raiz, Aqui compara Nodos No variables de tipo T por eso funciona usar == (vendria a ser como comparar direcciones :D)
+                if (actual.izq != null) { // El hijo izquierdo No es Null
+                    _raiz = actual.izq; // la raiz pasa a ser el hijo izquierdo
+                    _raiz.padre = null;
+                } else { // El hijo derecho No es Null
+                   _raiz = actual.der ; // la raiz pasa a ser el hijo derecho
+                    _raiz.padre = null;
+                } 
+            } else { // Busco en que lado esta el nodo (der o izq)
+                if (actual.izq != null) { // El hijo izquierdo No es Null
+                    Nodo nieto = actual.izq;
+                    nieto.padre = actual.padre; // El nieto apunta al abuelo
+                    if(actual.padre.izq == actual){ //Le preguntás al abuelo si su brazo izquierdo sostenía al eliminado(actual)
+                         actual.padre.izq = nieto; //El abuelo apunta al nieto
+                    } else {
+                        actual.padre.der = nieto;
+                    }
+                    
+                } else { // El hijo derecho No es Null
+                    Nodo nieto = actual.der;
+                    nieto.padre = actual.padre; // El nieto apunta al abuelo
+                    if(actual.padre.izq == actual){ //Le preguntás al abuelo si su brazo izquierdo sostenía al eliminado(actual)
+                         actual.padre.izq = nieto; //El abuelo apunta al nieto
+                    } else {
+                        actual.padre.der = nieto;
+                    }
+                } 
+            }
+        }
+
+        
 
     }
 
