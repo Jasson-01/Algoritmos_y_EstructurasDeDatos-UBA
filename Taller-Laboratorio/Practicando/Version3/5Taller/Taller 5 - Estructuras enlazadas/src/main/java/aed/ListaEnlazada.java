@@ -1,11 +1,11 @@
 package aed;
 
 public class ListaEnlazada<T> {
-
+    
+    // Completar atributos privados
     private Nodo primero;
     private Nodo ultimo;
     private int longitudLista;
-    // Completar atributos privados
 
     private class Nodo {
         // Completar
