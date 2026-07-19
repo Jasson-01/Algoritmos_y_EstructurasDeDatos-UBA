@@ -32,33 +32,64 @@ public class ABB<T extends Comparable<T>> {
             this.nodoApuntado = n;
         }
 
-        private void eliminarNodoSinBuscarlo(Nodo actual) {
-            if (actual == null) {
-                return;
-            }
-
-            if (esHoja(actual) || tieneUnSoloHijo(actual)) {
-                eliminarNodoGeneral(actual);
-            } else {
-                Nodo reemplazoMinimoDer = minimoNodoDer(actual);
-                actual.valor = reemplazoMinimoDer.valor;
-                eliminarNodoGeneral(reemplazoMinimoDer);
-            }
-            _cardinal--;
-        }
-
         public T valor() {
             return nodoApuntado.valor;
         }
 
+        // Para que busque en el árbol el nodo que tenga el mismo valor que el handle, y
+        // después lo elimine
+        // Usamos el eliminar de la clase principal (por eso el this)
         public void eliminar() {
-            eliminarNodoSinBuscarlo(nodoApuntado);
+            ABB.this.eliminar(nodoApuntado.valor);
         }
+        
+        // 2DA FORMA - del método eliminar():
+        // private void eliminarNodoSinBuscarlo(Nodo actual) {
+        //     if (actual == null) {
+        //         return;
+        //     }
+
+        //     if (esHoja(actual) || tieneUnSoloHijo(actual)) {
+        //         eliminarNodoGeneral(actual);
+        //     } else {
+        //         Nodo reemplazoMinimoDer = minimoNodoDer(actual);
+        //         actual.valor = reemplazoMinimoDer.valor;
+        //         eliminarNodoGeneral(reemplazoMinimoDer);
+        //     }
+        //     _cardinal--;
+        // }
+
+        // public void eliminar() {
+        //     if (nodoApuntado == null) {
+        //         return;
+        //     }
+
+        //     T valorAEliminar = nodoApuntado.valor;
+        //     Nodo actual = _raiz;
+
+        //     while (actual != null) {
+        //         int comparador = valorAEliminar.compareTo(actual.valor);
+
+        //         if (comparador == 0) {
+        //             eliminarNodoSinBuscarlo(actual);
+        //             return;
+        //         } else if (comparador < 0) {
+        //             actual = actual.izq;
+        //         } else {
+        //             actual = actual.der;
+        //         }
+        //     }
+        // }
+
     }
 
     public ABB() {
         _raiz = null;
         _cardinal = 0;
+    }
+
+    public int cardinal() {
+        return _cardinal;
     }
 
     public T minimo() {
@@ -72,6 +103,18 @@ public class ABB<T extends Comparable<T>> {
             actual = actual.izq;
         }
 
+        return actual.valor;
+    }
+
+    public T maximo() {
+        Nodo actual = _raiz;
+        if (_raiz == null) {
+            return null;
+        }
+        while (actual.der != null) { // Al terminar el while, "actual" vendria a ser el Nodo que buscabamos osea, el
+                                     // maximo ;D
+            actual = actual.der;
+        }
         return actual.valor;
     }
 
@@ -172,9 +215,7 @@ public class ABB<T extends Comparable<T>> {
                     actual.padre.der = null;
                 }
             }
-        }
-
-        if (tieneUnSoloHijo(actual)) {
+        } else if (tieneUnSoloHijo(actual)) {
             if (actual == _raiz) { // Si el nodo actual(el nodo a eliminar) es la raiz, Aqui compara Nodos, No
                                    // variables de tipo T por eso funciona usar == (vendria a ser como comparar
                                    // direcciones :D)
@@ -266,7 +307,7 @@ public class ABB<T extends Comparable<T>> {
 
             // Si hay más elementos después de este, agregamos la coma
             if (iterador.haySiguiente()) {
-                textoAImprimir += ",";
+                textoAImprimir += ", ";
             }
         }
 
