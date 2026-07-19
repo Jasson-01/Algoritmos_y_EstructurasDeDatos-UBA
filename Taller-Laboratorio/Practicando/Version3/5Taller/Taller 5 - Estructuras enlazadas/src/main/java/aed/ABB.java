@@ -10,9 +10,9 @@ public class ABB<T extends Comparable<T>> {
     private class Nodo {
         // Agregar atributos privados del Nodo
         T valor;
-        Nodo izq;
-        Nodo der;
-        Nodo padre;
+        private Nodo izq;
+        private Nodo der;
+        private Nodo padre;
 
         // Crear Constructor del nodo
         Nodo(T v) {
@@ -36,51 +36,12 @@ public class ABB<T extends Comparable<T>> {
             return nodoApuntado.valor;
         }
 
-        // Para que busque en el árbol el nodo que tenga el mismo valor que el handle, y
-        // después lo elimine
-        // Usamos el eliminar de la clase principal (por eso el this)
         public void eliminar() {
-            ABB.this.eliminar(nodoApuntado.valor);
+            if (nodoApuntado != null) {
+                eliminarNodo(nodoApuntado); // Lo sacamos del arbol
+            }
+            nodoApuntado = null; // Lo sacamos del Handle, asignando null a nodoApuntado
         }
-        
-        // 2DA FORMA - del método eliminar():
-        // private void eliminarNodoSinBuscarlo(Nodo actual) {
-        //     if (actual == null) {
-        //         return;
-        //     }
-
-        //     if (esHoja(actual) || tieneUnSoloHijo(actual)) {
-        //         eliminarNodoGeneral(actual);
-        //     } else {
-        //         Nodo reemplazoMinimoDer = minimoNodoDer(actual);
-        //         actual.valor = reemplazoMinimoDer.valor;
-        //         eliminarNodoGeneral(reemplazoMinimoDer);
-        //     }
-        //     _cardinal--;
-        // }
-
-        // public void eliminar() {
-        //     if (nodoApuntado == null) {
-        //         return;
-        //     }
-
-        //     T valorAEliminar = nodoApuntado.valor;
-        //     Nodo actual = _raiz;
-
-        //     while (actual != null) {
-        //         int comparador = valorAEliminar.compareTo(actual.valor);
-
-        //         if (comparador == 0) {
-        //             eliminarNodoSinBuscarlo(actual);
-        //             return;
-        //         } else if (comparador < 0) {
-        //             actual = actual.izq;
-        //         } else {
-        //             actual = actual.der;
-        //         }
-        //     }
-        // }
-
     }
 
     public ABB() {
@@ -177,21 +138,21 @@ public class ABB<T extends Comparable<T>> {
 
     // *** Aqui comienzan los metodos auxiliares del metodo eliminar() ***
 
-    public boolean tieneUnSoloHijo(Nodo nodo) {
+    private boolean tieneUnSoloHijo(Nodo nodo) {
         if ((nodo.izq != null && nodo.der == null) || (nodo.izq == null && nodo.der != null)) {
             return true;
         }
         return false;
     }
 
-    public boolean esHoja(Nodo nodo) {
+    private boolean esHoja(Nodo nodo) {
         if (nodo.izq == null && nodo.der == null) {
             return true;
         }
         return false;
     }
 
-    public Nodo minimoNodoDer(Nodo actual) {
+    private Nodo minimoNodoDer(Nodo actual) {
         Nodo nodoDerecho = actual.der;
         while (nodoDerecho.izq != null) {
             nodoDerecho = nodoDerecho.izq;
@@ -200,7 +161,7 @@ public class ABB<T extends Comparable<T>> {
                             // nodo minimo que buscabamos.
     }
 
-    public void eliminarNodoGeneral(Nodo actual) {
+    private void eliminarNodoCaso1y2(Nodo actual) {
 
         if (esHoja(actual)) {
             if (actual == _raiz) { // Si el nodo actual(el nodo a eliminar) es la raiz, Aqui compara Nodos No
@@ -251,7 +212,7 @@ public class ABB<T extends Comparable<T>> {
         }
     }
 
-    public Nodo nodoAEliminar(T elem) {
+    private Nodo nodoAEliminar(T elem) {
         Nodo actual = _raiz;
         // El bucle viaja seguro mientras no se caiga del árbol
 
@@ -270,9 +231,7 @@ public class ABB<T extends Comparable<T>> {
 
     }
 
-    public void eliminar(T elem) {
-        Nodo actual = nodoAEliminar(elem);
-
+    private void eliminarNodo(Nodo actual) {
         if (actual == null) { // Si el arbol esta vacio
             return; // No existe, devolvemos asi como esta, sin avanzar mas en el codigo (salimos
                     // del metodo)
@@ -280,17 +239,54 @@ public class ABB<T extends Comparable<T>> {
 
         // Eligimos entre el caso 1 o el caso 2
         if (esHoja(actual) || tieneUnSoloHijo(actual)) {
-            eliminarNodoGeneral(actual);
+            eliminarNodoCaso1y2(actual);
         }
-        // Si no es uno de los casos anteriores, entonces es el caso 3 por descarte
+        // Si no es uno de los casos anteriores, entonces es el caso 3 (tiene dos hijos)
+        // por descarte
         else {
-            Nodo reemplazoMinimoDer = minimoNodoDer(actual);
-            actual.valor = reemplazoMinimoDer.valor; // el valor del minimo lo pasamos al nodo.valor a reemplazar
-            eliminarNodoGeneral(reemplazoMinimoDer); // eliminamos el nodo minimo que nos ayudo a reemplazar el nodo a
-                                                     // eliminar
-        }
+            Nodo reemplazoMinimoDer = minimoNodoDer(actual); // Primero encontramos el nodo que lo va a reemplazar al
+                                                             // actual
 
-        _cardinal--;
+            // Sacamos el Nodo elegido del árbol (reemplazoMinimoDer = elegido)
+            // Si el nodo a reemplazar no es el hijo derecho inmediato
+            if (reemplazoMinimoDer != actual.der) {
+
+                // Enlazamos el hijo derecho del Elegido con el abuelo pero No con el izquierdo
+                // porque ahi ya no seria el nodo elegido el "Minimo derecho"
+                reemplazoMinimoDer.padre.izq = reemplazoMinimoDer.der; // ( abuelo(mano izquierda) -> nieto derecho)
+                if (reemplazoMinimoDer.der != null) {
+                    reemplazoMinimoDer.der.padre = reemplazoMinimoDer.padre; // (nieto derecho -> abuelo)
+                }
+                // El nodo elegido lo pasamos a la mano derecha del Nodo a eliminar
+                reemplazoMinimoDer.der = actual.der; // Aqui el nodo elegio y el nodo a eliminar apuntan al mismo hijo
+                                                     // derecho ( elegido mano derecha -> nuevo hijo derecho)
+                reemplazoMinimoDer.der.padre = reemplazoMinimoDer; // Aqui lo confirmamos por que como es doble enlaze
+                                                                   // (hijo original derecho -> elegido(nuevo padre))
+            }
+
+            // Conectar el Elegido al padre del nodo actual
+            reemplazoMinimoDer.padre = actual.padre; // (elegido -> padre del nodo a eliminar)
+            if (actual.padre == null) { // significa que es la raiz
+                _raiz = reemplazoMinimoDer; // Reemplazo la raiz por el Nodo elegido
+            } else if (actual == actual.padre.izq) { // Vemos en que brazo del abuelo estamos agarrados (comenzamos con
+                                                     // el brazo izq del abuelo -> elegido)
+                actual.padre.izq = reemplazoMinimoDer;
+            } else { // Si el abuelo del nodo a eliminar es su mano derecha (abuelo brazo der ->
+                     // elegido)
+                actual.padre.der = reemplazoMinimoDer;
+            }
+
+            // El Elegido ahora toma al hijo izquierdo del nodo a eliminar
+            reemplazoMinimoDer.izq = actual.izq; // (Elegido mano izquierda -> Hijo izquierdo)
+            reemplazoMinimoDer.izq.padre = reemplazoMinimoDer; // ( Hijo izquierdo -> Elegido)
+
+        }
+        _cardinal -= 1;
+    }
+
+    public void eliminar(T elem) {
+        Nodo actual = nodoAEliminar(elem);
+        eliminarNodo(actual);
     }
 
     @Override
