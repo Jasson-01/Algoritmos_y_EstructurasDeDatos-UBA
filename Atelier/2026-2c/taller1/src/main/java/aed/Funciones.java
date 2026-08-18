@@ -1,4 +1,4 @@
-package aed;
+package aed; // Para poder subirlo al campus, tienes que borrar esta linea y luego subirlo
 
 class Funciones {
 
