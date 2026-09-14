@@ -1,0 +1,159 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{AEDEspecificacion}[2025/08/11 Macros de especificacion para AED]
+
+\RequirePackage{AEDLogica}
+\RequirePackage{AEDUtil}    % RequireMathMode y Obsoleto
+\RequirePackage{ifthen}     % Especificamente para que los procs puedan o no tener tipo de retorno sin hacer dos comandos
+\RequirePackage{changepage} % Para indentar, adjustwidth depende de esto
+
+
+% -------------- Tipos -----------------
+
+% Tipos basicos
+\newcommand{\nat}{\Obsoleto{nat}{N}{\N}}   % Estos solo son renombres y creo que podrian borrarse porque me parece mas natural usar directo las letras
+\newcommand{\ent}{\Obsoleto{ent}{Z}{\Z}}
+\newcommand{\float}{\Obsoleto{float}{R}{\R}} % float en realidad seria Q pero por algun motivo usamos R
+\newcommand{\bool}{\RequireMathMode{bool}{\mathsf{bool}}}
+\newcommand{\cha}{\RequireMathMode{cha}{\mathsf{char}}}         % No se puede llamar char porque eso ya es un comando de latex y me da miedo redefinirlo
+\newcommand{\str}{\RequireMathMode{string}{\mathsf{string}}}
+
+% Renombre de tipos
+\newcommand{\ES}[2]{#1 \texttt{ES} #2}
+
+%enum
+\newcommand{\enum}[2]{\textsf{enum} \ES{#1}{\{#2\}}}
+
+% Tipos de la forma T<S> o T<S1, S2>
+\newcommand{\TipoParam}[2]{\RequireMathMode{TipoParam}{\mathsf{#1}\langle #2\rangle}}
+\newcommand{\TipoParamDos}[3]{\RequireMathMode{TipoParamDos}{\mathsf{#1}\langle #2, #3\rangle}}
+
+% Los tipos complejos que tenemos en especificacion
+\newcommand{\seq}[1]{\RequireMathMode{seq}{\TipoParam{seq}{#1}}}
+\newcommand{\conj}[1]{\RequireMathMode{conj}{\TipoParam{conj}{#1}}}
+\newcommand{\dicc}[2]{\RequireMathMode{dicc}{\TipoParamDos{dicc}{#1}{#2}}}
+\newcommand{\dom}[1]{\RequireMathMode{dom}({#1})}
+\newcommand{\tupla}[1]{\RequireMathMode{tupla}{\mathsf{tupla}\ \langle #1 \rangle}} % Como puede tener cualquier cantidad de elementos se pasa todo en un solo parametro, es a mano
+\newcommand{\struct}[1]{\RequireMathMode{struct}{\mathsf{struct}\ \langle #1 \rangle}} % Igual que la tupla, se hace todo a mano.
+
+
+% Usos comunes
+\newcommand{\seqZ}{\seq{\Z}}
+\newcommand{\seqChar}{\seq{\cha}}
+\newcommand{\longitud}[1]{\RequireMathMode{longitud}{|#1|}}
+\newcommand{\cabeza}[1]{\RequireMathMode{cabeza}{\mathsf{head}(#1)}}
+\newcommand{\cola}[1]{\RequireMathMode{cola}{\mathsf{tail}}(#1)}
+\newcommand{\claves}[1]{\RequireMathMode{claves}{\mathsf{claves}(#1)}}
+\newcommand{\vacio}{\RequireMathMode{vacio}{\langle \rangle}}
+\newcommand{\setKey}[3]{\RequireMathMode{setKey}{\mathsf{setKey}(#1,#2,#3)}}
+\newcommand{\delKey}[2]{\RequireMathMode{delKey}{\mathsf{delKey}(#1,#2)}}
+
+
+\newcommand{\IfThenElse}[3]{\RequireMathMode{IfThenElse}{\mathsf{IfThenElse}(#1, #2, #3)}} 
+
+
+% A discusion: dejar o no los \noindent
+
+% ------------------ Pred -----------------------
+
+% Va por separado para que se pueda usar en enunciados 
+% \encabezadoPred{Nombre}{Argumentos}
+\newcommand{\encabezadoPred}[2]{%
+    \noindent\texttt{pred #1}\ifthenelse{\equal{#2}{}}{$(\ldots)$}{$(#2)$}
+}
+
+% \pred{Nombre}{Argumentos}{Cuerpo}
+\newcommand{\pred}[3]{
+    \encabezadoPred{#1}{#2} \{
+    \begin{adjustwidth}{+2em}{}
+        $#3$
+    \end{adjustwidth}
+    \}
+	\smallskip
+}
+
+\newcommand{\predCorto}[3]{ \encabezadoPred{#1}{#2} \{ $#3$ \} }
+
+
+% ------------------ Aux ------------------------
+
+% \encabezadoAux{Nombre}{Argumentos}{Tipo}
+\newcommand{\encabezadoAux}[3]{\noindent\texttt{aux #1}$(#2) : #3$}
+
+% \aux{Nombre}{Argumentos}{Tipo}{Cuerpo}
+\newcommand{\aux}[4]{
+    \encabezadoAux{#1}{#2}{#3} $=$
+    \begin{adjustwidth}{+2em}{}
+        $#4$
+    \end{adjustwidth}
+	\smallskip
+}
+
+\newcommand{\auxCorto}[4]{\encabezadoAux{#1}{#2}{#3} $= #4$}
+
+
+% ------------------ Proc --------------------------
+
+\newcommand{\In}{\textsf{in }}
+\newcommand{\Out}{\textsf{out }}
+\newcommand{\Inout}{\textsf{inout }}
+
+% Permito que \requiere y \asegura se puedan usar afuera de procs porque podria ser util (y es mas facil asi jiju)
+
+% A discutir: Dejar o sacar los \par (salto de linea)
+
+% \requiere{Cuerpo}
+\newcommand{\requiere}[1]{
+    \noindent\texttt{requiere} \{
+    \begin{adjustwidth}{+2em}{}
+        $#1$
+    \end{adjustwidth}
+    \} \par
+}
+
+\newcommand{\requiereCortoSinSalto}[1]{\texttt{requiere} \{ $#1$ \}}  % Para algunos casos muy especificos
+
+\newcommand{\requiereCorto}[1]{\noindent\requiereCortoSinSalto{#1} \par}
+
+
+% \asegura{Cuerpo}
+\newcommand{\asegura}[1]{
+    \noindent\texttt{asegura} \{
+    \begin{adjustwidth}{+2em}{}
+        $#1$
+    \end{adjustwidth}
+    \} \par
+}
+
+\newcommand{\aseguraCortoSinSalto}[1]{\texttt{asegura} \{ $#1$ \}}
+
+\newcommand{\aseguraCorto}[1]{\noindent\aseguraCortoSinSalto{#1} \par}
+
+% \encabezadoProc{Nombre}{Argumentos}{Tipo (si no hay dejar en blanco, pero no pueden faltar las llaves)}
+\newcommand{\encabezadoProc}[3]{\noindent\texttt{proc #1}$(#2) \ifthenelse{\equal{#3}{}}{}{: #3} $}
+
+% \begin{proc}{Nombre}{Argumentos}{Tipo (si no hay dejar en blanco, pero no pueden faltar las llaves)}
+\newenvironment{proc}[3]{
+    \encabezadoProc{#1}{#2}{#3} \{
+    \begin{adjustwidth}{+1.5em}{}
+}{
+    \end{adjustwidth}
+    \}
+	\medskip
+
+}
+
+
+% ++ para concatenar listas sin los espacios
+\newcommand{\concat}{\RequireMathMode{concat}{\ {+}{+}\ }}
+
+% Tipos que aparecen a veces en las guias de disenio pero en procs de especificacion. 
+% Capaz habria que ponerlos en otro lado. Creo que no pegan en AEDDisenio.
+
+\newcommand{\ListaEnlazada}[1]{\RequireMathMode{ListaEnlazada}{\TipoParam{ListaEnlazada}{#1}}}
+
+
+% Requieres con texto, para ejercicios de Rep/ABS y diseño
+
+\newcommand{\requiereTexto}[1]{\noindent\requiereCortoSinSalto{\emph{#1}} \par}
+\newcommand{\aseguraTexto}[1]{\noindent\aseguraCortoSinSalto{\emph{#1}} \par}
+
