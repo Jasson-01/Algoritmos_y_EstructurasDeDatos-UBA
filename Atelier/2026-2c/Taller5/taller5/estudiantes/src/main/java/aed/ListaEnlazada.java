@@ -19,25 +19,29 @@ public class ListaEnlazada<T extends Comparable<T>> {
 
     private class HandleLE implements Handle<T>{
         /*Completar con los atributos privados*/
+        private Nodo nodoApuntado;
 
         private HandleLE(Nodo n){
-            throw new UnsupportedOperationException("No implementado aún");
+            nodoApuntado = n;
         }
 
         public T valor(){
-            throw new UnsupportedOperationException("No implementado aún");
+            return nodoApuntado.dato;
         }
 
         public void eliminar(){
-            throw new UnsupportedOperationException("No implementado aún");
+            if (nodoApuntado != null){
+                eliminarNodo(nodoApuntado); // Lo sacamos de la LE O(1) eliminarNodo
+            }
+            nodoApuntado = null; // Lo sacamos del handle
         }
 
         public int compareTo(Handle<T> otroHandle){
-            throw new UnsupportedOperationException("No implementado aún");
+            return this.valor().compareTo(otroHandle.valor());
         }
 
         public String toString(){
-            throw new UnsupportedOperationException("No implementado aún");
+            return valor().toString();
         }
     }
 
